@@ -1,0 +1,98 @@
+import os
+import platform
+import tkinter as tk
+from tkinter import messagebox
+
+global dictstd
+current_id = 4  # Initial ID counter
+
+dictstd = {1: {"name": "yuvraj", "age": 20}, 2: {"name": "abhishek", "age": 21},
+           3: {"name": "kishor", "age": 22}, 4: {"name": "sunil", "age": 23}}
+
+
+def get_new_id():
+    global current_id
+    current_id += 1
+    return current_id
+
+
+def view_students():
+    messagebox.showinfo("List of students", "\n".join(
+        ["ID: {}, Name: {}, Age: {}".format(id_, details["name"], details["age"]) for id_, details in dictstd.items()]))
+
+
+def add_student():
+    newstd_name = name_entry.get()
+    newstd_age = age_entry.get()
+    if newstd_name and newstd_age:
+        newstd_age = int(newstd_age)
+        newstd_id = get_new_id()  # Generate a new unique ID
+        dictstd[newstd_id] = {"name": newstd_name, "age": newstd_age}
+        messagebox.showinfo("Success", "New student {} successfully added with ID {}.".format(newstd_name, newstd_id))
+        name_entry.delete(0, tk.END)
+        age_entry.delete(0, tk.END)
+    else:
+        messagebox.showerror("Error", "Please enter both name and age!")
+
+
+def search_student():
+    search_id = int(search_entry.get())
+    if search_id in dictstd:
+        messagebox.showinfo("Record found", "ID: {}, Name: {}, Age: {}".format(search_id, dictstd[search_id]["name"], dictstd[search_id]["age"]))
+    else:
+        messagebox.showerror("Error", "No record found for student ID {}".format(search_id))
+
+
+def remove_student():
+    remove_id = int(remove_entry.get())
+    if remove_id in dictstd:
+        removed_name = dictstd[remove_id]["name"]
+        del dictstd[remove_id]
+        messagebox.showinfo("Success", "Student {} with ID {} successfully deleted.".format(removed_name, remove_id))
+    else:
+        messagebox.showerror("Error", "No record found for student ID {}".format(remove_id))
+
+
+def on_closing():
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        root.destroy()
+
+
+root = tk.Tk()
+root.title("Student Management System")
+
+label = tk.Label(root, text="Welcome to Student Management System", font=("Arial", 16))
+label.grid(row=0, column=0, columnspan=2)
+
+name_label = tk.Label(root, text="Name:")
+name_label.grid(row=1, column=0)
+name_entry = tk.Entry(root)
+name_entry.grid(row=1, column=1)
+
+age_label = tk.Label(root, text="Age:")
+age_label.grid(row=2, column=0)
+age_entry = tk.Entry(root)
+age_entry.grid(row=2, column=1)
+
+view_btn = tk.Button(root, text="View Students", command=view_students)
+view_btn.grid(row=3, column=0)
+
+add_btn = tk.Button(root, text="Add Student", command=add_student)
+add_btn.grid(row=3, column=1)
+
+search_label = tk.Label(root, text="Search ID:")
+search_label.grid(row=4, column=0)
+search_entry = tk.Entry(root)
+search_entry.grid(row=4, column=1)
+search_btn = tk.Button(root, text="Search", command=search_student)
+search_btn.grid(row=4, column=2)
+
+remove_label = tk.Label(root, text="Remove ID:")
+remove_label.grid(row=5, column=0)
+remove_entry = tk.Entry(root)
+remove_entry.grid(row=5, column=1)
+remove_btn = tk.Button(root, text="Remove", command=remove_student)
+remove_btn.grid(row=5, column=2)
+
+root.protocol("WM_DELETE_WINDOW", on_closing)
+root.mainloop()
