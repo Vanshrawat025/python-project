@@ -1,0 +1,80 @@
+import os
+import platform
+
+global dictstd
+current_id = 4 # Initial ID counter
+
+dictstd = {1: {"name": "yuvraj", "age": 20}, 2: {"name": "abhishek", "age": 21}, 3: {"name": "kishor", "age": 22}, 4: {"name": "sunil", "age": 23}}
+
+def get_new_id():
+    global current_id
+    current_id += 1
+    return current_id
+
+def manageStudent():
+    print("""
+          
+========= Welcome to student management system =======
+ 
+Enter  1 : To view student's list
+Enter  2 : To add new student
+Enter  3 : to search student 
+Enter  4 : To remove student
+          
+""")
+    try:
+        userInput = int(input("Please select an above option: "))
+    except ValueError:
+        exit("\nhey! that's not a number")
+    else:
+        print("\n")
+
+    if userInput == 1:
+        print("List of students:")
+        for id_, details in dictstd.items():
+            print("=> ID: {}, Name: {}, Age: {}".format(id_, details["name"], details["age"]))
+
+    elif userInput == 2:
+        newstd_name = input("Enter the student's name: ")
+        newstd_age = int(input("Enter the student's age: "))
+        newstd_id = get_new_id()  # Generate a new unique ID
+        dictstd[newstd_id] = {"name": newstd_name, "age": newstd_age}
+        print("\n=> New student {} successfully added with ID {}.".format(newstd_name, newstd_id))
+        for id_, details in dictstd.items():
+            print("=> ID: {}, Name: {}, Age: {}".format(id_, details["name"], details["age"]))
+
+    elif userInput == 3:
+        search_id = int(input("Enter student ID to search: "))
+        if search_id in dictstd:
+            print("\n=> Record found for student ID {}: Name {}, Age {}".format(search_id, dictstd[search_id]["name"], dictstd[search_id]["age"]))
+        else:
+            print("\n=> No Record found for student ID {}".format(search_id))
+
+    elif userInput == 4:
+        remove_id = int(input("Enter student ID to remove: "))
+        if remove_id in dictstd:
+            removed_name = dictstd[remove_id]["name"]
+            del dictstd[remove_id]
+            print("\n=> Student {} with ID {} successfully deleted.".format(removed_name, remove_id))
+            for id_, details in dictstd.items():
+                print("=> ID: {}, Name: {}, Age: {}".format(id_, details["name"], details["age"]))
+        else:
+            print("\n=> No record found for student ID {}".format(remove_id))
+
+    elif userInput < 1 or userInput > 4:
+        print("Enter a valid option")
+
+manageStudent()
+
+def runAgain():
+    run_again = input("\nWant to run again? (y/n): ")
+    if run_again.lower() == 'y':
+        if platform.system() == "Windows":
+            os.system('cls')
+        else:
+            os.system('clear')
+        manageStudent()
+    else:
+        quit("Goodbye!")
+
+runAgain()
